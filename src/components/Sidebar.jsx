@@ -1,4 +1,3 @@
-
 import {
   LayoutDashboard,
   ClipboardList,
@@ -7,7 +6,11 @@ import {
   Users,
   Bell,
   Settings,
+  LogOut,
 } from "lucide-react";
+
+import { replace, useNavigate } from "react-router";
+import { supabase } from "../lib/supabase";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, active: true },
@@ -19,6 +22,20 @@ const menuItems = [
 ];
 
 export default function Sidebar() {
+  const navigate = useNavigate();
+
+  async function handleLogout() {
+    const { error } = await supabase.auth.signOut();
+
+    if (error) {
+      console.error("Gagal logout:", error);
+      alert("Gagal logout. Silahkan coba lagi.");
+      return;
+    }
+
+    navigate("/login", { replace: true });
+  }
+
   return (
     <aside className="flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white p-5">
       <div className="mb-10 flex items-center gap-3">
@@ -60,6 +77,14 @@ export default function Sidebar() {
       <button className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50">
         <Settings size={19} />
         Pengaturan
+      </button>
+      <button
+        type="button"
+        onClick={handleLogout}
+        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50"
+      >
+        <LogOut size={19} />
+        Keluar
       </button>
     </aside>
   );
