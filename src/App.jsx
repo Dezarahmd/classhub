@@ -1,26 +1,18 @@
+import { BrowserRouter, Routes, Route } from "react-router";
 
-import DashboardLayout from "./layouts/DashboardLayout";
-import DashboardSummary from "./components/DashboardSummary";
+import Dashboard from "./pages/Dashboard";
+import Login from "./pages/Login";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 export default function App() {
   return (
-    <DashboardLayout>
-      <header className="mb-8">
-        <p className="text-sm text-slate-500">
-          Selamat datang kembali,
-        </p>
-
-        <h2 className="mt-1 text-3xl font-bold text-slate-900">
-          Dashboard Kelas 👋
-        </h2>
-
-        <p className="mt-2 text-slate-500">
-          Pantau aktivitas dan tugas kelasmu di satu tempat.
-        </p>
-      </header>
-
-      <DashboardSummary />
-    </DashboardLayout>
-  );
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<ProtectedRoute>
+          <Dashboard/>
+        </ProtectedRoute>}/>
+        <Route path="/login" element={<Login/>}/>
+      </Routes>
+    </BrowserRouter>
+  )
 }
-  
