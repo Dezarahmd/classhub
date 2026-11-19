@@ -87,14 +87,14 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+      <div className="w-full max-w-sm bg-white shadow-lg px-6 py-8 rounded-2xl">
 
         {/* Header */}
         <div className="mb-8 text-center">
           <div className="flex justify-center mb-4">
             <div className="p-3 bg-gray-100 rounded-xl">
-              <GraduationCap className="w-8 h-8 text-gray-900" />
+              <GraduationCap className="w-8 h-8 text-blue-500" />
             </div>
           </div>
 
@@ -134,7 +134,7 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nim@bsi.ac.id"
-                className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black text-sm disabled:opacity-50"
+                className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm disabled:opacity-50"
               />
             </div>
           </div>
@@ -149,9 +149,9 @@ export default function Login() {
                 Password
               </label>
 
-              <span className="text-xs text-gray-500">
+              <a className="text-xs text-gray-500">
                 Lupa password?
-              </span>
+              </a>
             </div>
 
             <div className="relative">
@@ -169,7 +169,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-10 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-black focus:ring-1 focus:ring-black text-sm disabled:opacity-50"
+                className="w-full pl-9 pr-10 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm disabled:opacity-50"
               />
 
               <button
@@ -184,9 +184,9 @@ export default function Login() {
                 className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
               >
                 {showPassword ? (
-                  <EyeOff className="w-4 h-4" />
+                  <EyeOff className="w-4 h-4 hover:text-blue-500" />
                 ) : (
-                  <Eye className="w-4 h-4" />
+                  <Eye className="w-4 h-4 hover:text-blue-500" />
                 )}
               </button>
             </div>
@@ -206,7 +206,7 @@ export default function Login() {
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 py-2.5 px-4 bg-black hover:bg-gray-800 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className="w-full mt-2 py-2.5 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
           >
             {isLoading ? (
               <>

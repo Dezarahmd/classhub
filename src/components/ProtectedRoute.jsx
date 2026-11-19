@@ -1,14 +1,17 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router";
 import { supabase } from "../lib/supabase";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
+  const requestId = useRef(0);
 
   useEffect(() => {
     let active = true;
 
     async function checkAccess() {
+      const currentRequestId = ++requestId.current;
+
       setStatus("loading");
 
       try {
@@ -17,8 +20,12 @@ export default function ProtectedRoute({ children }) {
           error: userError,
         } = await supabase.auth.getUser();
 
+        if (!active || currentRequestId !== requestId.current) {
+          return;
+        }
+
         if (userError || !user) {
-          if (active) setStatus("unauthenticated");
+          setStatus("unauthenticated");
           return;
         }
 
@@ -28,26 +35,38 @@ export default function ProtectedRoute({ children }) {
           .eq("user_id", user.id)
           .limit(1);
 
-        if (error) {
-          console.error("Gagal menerima keanggotaan:", error);
-          if (active) setStatus("error");
+        if (!active || currentRequestId !== requestId.current) {
           return;
         }
 
-        if (active) {
-          setStatus(data.length > 0 ? "authorized" : "forbidden");
+        if (error) {
+          console.error("Gagal mengambil keanggotaan:", error);
+          setStatus("error");
+          return;
         }
+
+        setStatus(data && data.length > 0 ? "authorized" : "forbidden");
       } catch (error) {
         console.error("Pemeriksaan akses gagal:", error);
-        if (active) setStatus("error");
+
+        if (active && currentRequestId === requestId.current) {
+          setStatus("error");
+        }
       }
     }
+
+    // Pemeriksaan awal ketika komponen dipasang
     checkAccess();
 
+    // Pantau perubahan authentication
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
+      if (!active) return;
+
       if (event === "SIGNED_OUT") {
+        // Batalkan pengaruh request sebelumnya
+        requestId.current++;
         setStatus("unauthenticated");
       }
 
@@ -56,8 +75,10 @@ export default function ProtectedRoute({ children }) {
       }
     });
 
+    // Cleanup saat effect dibersihkan
     return () => {
       active = false;
+      requestId.current++;
       subscription.unsubscribe();
     };
   }, []);
@@ -79,7 +100,12 @@ export default function ProtectedRoute({ children }) {
   }
 
   if (status === "error") {
-    return <p>Gagal memeriksa akses. Silahkan refresh halaman.</p>;
+    return (
+      <p className="p-6 text-center text-red-600">
+        Gagal memeriksa akses. Silakan refresh halaman.
+      </p>
+    );
   }
+
   return children;
 }
