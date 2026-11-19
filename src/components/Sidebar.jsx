@@ -9,8 +9,10 @@ import {
   LogOut,
 } from "lucide-react";
 
-import { replace, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import { supabase } from "../lib/supabase";
+import { useMembership } from "../contexts/MembershipContext";
+import { canManageMembers } from "../utils/permissions";
 
 const menuItems = [
   { label: "Dashboard", icon: LayoutDashboard, active: true },
@@ -23,6 +25,8 @@ const menuItems = [
 
 export default function Sidebar() {
   const navigate = useNavigate();
+  const membership = useMembership();
+  const canManage = canManageMembers(membership?.role);
 
   async function handleLogout() {
     const { error } = await supabase.auth.signOut();
@@ -49,9 +53,9 @@ export default function Sidebar() {
         </div>
       </div>
 
-      <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <span className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
         Menu Utama
-      </p>
+      </span>
 
       <nav className="flex-1 space-y-2">
         {menuItems.map((item) => {
@@ -72,6 +76,18 @@ export default function Sidebar() {
             </a>
           );
         })}
+        {canManage && (
+          <div className="mt-6 space-y-2">
+            <p className="px-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+              Administrasi Kelas
+            </p>
+
+            <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600">
+              <Users size={19} />
+              Kelola Anggota
+            </div>
+          </div>
+        )}
       </nav>
 
       <button className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50">

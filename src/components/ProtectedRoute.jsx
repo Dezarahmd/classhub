@@ -1,17 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router";
 import { supabase } from "../lib/supabase";
+import { MembershipContext } from "../contexts/MembershipContext";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
+  const [membership, setMembership] = useState(null)
   const requestId = useRef(0);
 
   useEffect(() => {
     let active = true;
+    const requestTracker = requestId;
 
     async function checkAccess() {
       const currentRequestId = ++requestId.current;
 
+      setMembership(null)
       setStatus("loading");
 
       try {
@@ -31,7 +35,7 @@ export default function ProtectedRoute({ children }) {
 
         const { data, error } = await supabase
           .from("class_members")
-          .select("class_id")
+          .select("class_id, role")
           .eq("user_id", user.id)
           .limit(1);
 
@@ -44,7 +48,7 @@ export default function ProtectedRoute({ children }) {
           setStatus("error");
           return;
         }
-
+        setMembership(data?.[0] ?? null);
         setStatus(data && data.length > 0 ? "authorized" : "forbidden");
       } catch (error) {
         console.error("Pemeriksaan akses gagal:", error);
@@ -54,19 +58,16 @@ export default function ProtectedRoute({ children }) {
         }
       }
     }
-
-    // Pemeriksaan awal ketika komponen dipasang
     checkAccess();
 
-    // Pantau perubahan authentication
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
       if (!active) return;
 
       if (event === "SIGNED_OUT") {
-        // Batalkan pengaruh request sebelumnya
-        requestId.current++;
+        requestTracker.current++;
+        setMembership(null)
         setStatus("unauthenticated");
       }
 
@@ -75,10 +76,9 @@ export default function ProtectedRoute({ children }) {
       }
     });
 
-    // Cleanup saat effect dibersihkan
     return () => {
       active = false;
-      requestId.current++;
+      requestTracker.current++;
       subscription.unsubscribe();
     };
   }, []);
@@ -107,5 +107,9 @@ export default function ProtectedRoute({ children }) {
     );
   }
 
-  return children;
+  return (
+    <MembershipContext.Provider value={membership}>
+      {children}
+    </MembershipContext.Provider>
+  )
 }
