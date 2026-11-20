@@ -1,15 +1,13 @@
-import DashboardLayout from "../layouts/DashboardLayout";
 import DashboardSummary from "../components/DashboardSummary";
 import { useMembership } from "../contexts/MembershipContext";
 import { canManageTasks } from "../utils/permissions";
 
-
 export default function Dashboard() {
   const membership = useMembership();
-  const canManage = canManageTasks(membership?.role)
+  const canManage = canManageTasks(membership?.role);
 
   return (
-    <DashboardLayout>
+    <>
       <header className="mb-8 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
           <p className="text-sm text-slate-500">Selamat datang kembali,</p>
@@ -40,6 +38,6 @@ export default function Dashboard() {
         )}
       </header>
       <DashboardSummary />
-    </DashboardLayout>
+    </>
   );
 }

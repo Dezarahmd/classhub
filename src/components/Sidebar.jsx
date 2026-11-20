@@ -9,18 +9,18 @@ import {
   LogOut,
 } from "lucide-react";
 
-import { useNavigate } from "react-router";
+import { useNavigate, NavLink } from "react-router";
 import { supabase } from "../lib/supabase";
 import { useMembership } from "../contexts/MembershipContext";
 import { canManageMembers } from "../utils/permissions";
 
 const menuItems = [
-  { label: "Dashboard", icon: LayoutDashboard, active: true },
-  { label: "Tugas", icon: ClipboardList },
-  { label: "Jadwal", icon: CalendarDays },
-  { label: "Materi", icon: BookOpen },
-  { label: "Kelompok", icon: Users },
-  { label: "Pengumuman", icon: Bell },
+  { label: "Dashboard", icon: LayoutDashboard, path: "/" },
+  { label: "Tugas", icon: ClipboardList, path: "/tasks" },
+  { label: "Jadwal", icon: CalendarDays, path: "/schedule" },
+  { label: "Materi", icon: BookOpen, path: "/materials" },
+  { label: "Kelompok", icon: Users, path: "/groups" },
+  { label: "Pengumuman", icon: Bell, path: "/announcements" },
 ];
 
 export default function Sidebar() {
@@ -62,18 +62,21 @@ export default function Sidebar() {
           const Icon = item.icon;
 
           return (
-            <a
+            <NavLink
               key={item.label}
-              href="#"
-              className={`flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
-                item.active
-                  ? "bg-blue-50 text-blue-700"
-                  : "text-slate-600 hover:bg-slate-50"
-              }`}
+              to={item.path}
+              end={item.path === "/"}
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700"
+                    : "text-slate-600 hover:bg-slate-50"
+                }`
+              }
             >
               <Icon size={19} />
               {item.label}
-            </a>
+            </NavLink>
           );
         })}
         {canManage && (
@@ -82,18 +85,36 @@ export default function Sidebar() {
               Administrasi Kelas
             </p>
 
-            <div className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium text-slate-600">
+            <NavLink
+              to="/members"
+              className={({ isActive }) =>
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                  isActive
+                    ? "bg-blue-50 text-blue-700"
+                    : "text-slate-600 hover:bg-slate-50"
+                }`
+              }
+            >
               <Users size={19} />
               Kelola Anggota
-            </div>
+            </NavLink>
           </div>
         )}
       </nav>
 
-      <button className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-slate-600 transition hover:bg-slate-50">
+      <NavLink
+        to="/settings"
+        className={({ isActive }) =>
+          `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+            isActive
+              ? "bg-blue-50 text-blue-700"
+              : "text-slate-600 hover:bg-slate-50"
+          }`
+        }
+      >
         <Settings size={19} />
         Pengaturan
-      </button>
+      </NavLink>
       <button
         type="button"
         onClick={handleLogout}
