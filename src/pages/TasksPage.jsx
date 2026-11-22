@@ -3,6 +3,7 @@ import { useMembership } from "../contexts/MembershipContext";
 import { getAssignments } from "../services/assignmentService";
 import Modal from "../components/ui/Modal";
 import AssignmentForm from "../components/assignments/AssignmentForm";
+import { Pencil } from "lucide-react";
 
 export default function TasksPage() {
   const membership = useMembership();
@@ -13,12 +14,23 @@ export default function TasksPage() {
   const [loading, setLoading] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0)
+  const [selectedAssignment, setSelectedAssignment] = useState(null);
+  const [refreshKey, setRefreshKey] = useState(0);
   const displayedAssignments = assignment;
 
+  function handleEditAssignment(task) {
+    setSelectedAssignment(task);
+    setIsFormOpen(true);
+  }
+
+  function handleAddAssignment() {
+    setSelectedAssignment(null);
+    setIsFormOpen(true);
+  }
+
   function handleAssignmentCreated() {
-    setIsFormOpen(false)
-    setRefreshKey((prev) => prev + 1)
+    setIsFormOpen(false);
+    setRefreshKey((prev) => prev + 1);
   }
 
   useEffect(() => {
@@ -61,7 +73,7 @@ export default function TasksPage() {
       {canManageTasks && (
         <button
           className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 font-medium"
-          onClick={() => setIsFormOpen(true)}
+          onClick={handleAddAssignment}
         >
           + Tambah Tugas
         </button>
@@ -71,9 +83,9 @@ export default function TasksPage() {
         <Modal
           isOpen={isFormOpen}
           onClose={() => setIsFormOpen(false)}
-          title="Tambah Tugas Baru"
+          title={selectedAssignment ? "Edit Tugas" : "Tambah Tugas Baru"}
         >
-          <AssignmentForm classId={classId} onSuccess={handleAssignmentCreated}>
+          <AssignmentForm classId={classId} onSuccess={handleAssignmentCreated} assignment={selectedAssignment}>
             Form tambah tugas akan tampil disini
           </AssignmentForm>
         </Modal>
@@ -123,6 +135,16 @@ export default function TasksPage() {
                   </span>
                 )}
               </p>
+              {canManageTasks && (
+                  <button
+                    type="button"
+                    onClick={() => handleEditAssignment(task)}
+                    aria-label={`Edit tugas ${task.title}`}
+                    className="rounded-lg p-2 text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                  >
+                    <Pencil className="w-4 h-4" />
+                  </button>
+                )}
             </div>
           ))}
         </div>

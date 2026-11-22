@@ -1,16 +1,42 @@
 import { useState, useEffect } from "react";
 import { getSubjects } from "../../services/subjectService";
 import { supabase } from "../../lib/supabase";
-import { createAssignment } from "../../services/assignmentService";
+import {
+  createAssignment,
+  updateAssignment,
+} from "../../services/assignmentService";
 import { Save, Loader2 } from "lucide-react";
 
-export default function AssignmentForm({ classId, onSuccess }) {
+// Mengubah timestamp Supabase menjadi format datetime-local
+function toDatetimeLocal(value) {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) return "";
+
+  const offset = date.getTimezoneOffset() * 60_000;
+
+  return new Date(date.getTime() - offset).toISOString().slice(0, 16);
+}
+
+export default function AssignmentForm({
+  classId,
+  onSuccess,
+  assignment = null,
+}) {
+  const isEditMode = Boolean(assignment);
+
+  // State mata kuliah
   const [subjects, setSubjects] = useState([]);
   const [loadingSubjects, setLoadingSubjects] = useState(true);
   const [errorSubjects, setErrorSubjects] = useState("");
+
+  // State submit
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
+  // State form
   const [formData, setFormData] = useState({
     title: "",
     subject_id: "",
@@ -18,80 +44,33 @@ export default function AssignmentForm({ classId, onSuccess }) {
     deadline: "",
   });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    if (isSubmitting) return;
-
-    if (!formData.title.trim()) {
-      alert("Judul tugas wajib diisi!");
-      return;
+  // Mengisi form saat Edit, reset saat Create
+  useEffect(() => {
+    if (isEditMode) {
+      setFormData({
+        title: assignment.title ?? "",
+        subject_id: assignment.subject_id ?? "",
+        description: assignment.description ?? "",
+        deadline: toDatetimeLocal(assignment.deadline),
+      });
+    } else {
+      setFormData({
+        title: "",
+        subject_id: "",
+        description: "",
+        deadline: "",
+      });
     }
 
-    if (!formData.subject_id) {
-      alert("Mata kuliah wajib dipilih");
-      return;
-    }
-
-    if (!formData.deadline) {
-      alert("Deadline tugas wajib diisi!");
-      return;
-    }
-
-    const deadline = new Date(formData.deadline);
-    const dateNow = new Date();
-
-    if (Number.isNaN(deadline.getTime()) || deadline <= dateNow) {
-      alert("Deadline harus berupa tanggal valid di masa depan!");
-      return;
-    }
-
-    setIsSubmitting(true);
     setSubmitError("");
+  }, [assignment, isEditMode]);
 
-    try {
-      const { data, error } = await supabase.auth.getUser();
-      if (error || !data?.user) {
-        throw new Error("Sesi login tidak valid");
-      }
-      const userId = data.user.id;
-
-      const assignmentData = {
-        title: formData.title.trim(),
-        description: formData.description.trim(),
-        subject_id: formData.subject_id,
-        class_id: classId,
-        deadline: new Date(formData.deadline).toISOString(),
-        created_by: userId,
-      };
-      await createAssignment(assignmentData);
-      onSuccess?.()
-    } catch (error) {
-      setSubmitError(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
-  }
-
-  function handleChange(e) {
-    const { name, value } = e.target;
-
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  }
-
+  // Mengambil daftar mata kuliah
   useEffect(() => {
     if (!classId) {
       setSubjects([]);
       setLoadingSubjects(false);
       setErrorSubjects("");
-
-      setFormData((prev) => ({
-        ...prev,
-        subject_id: "",
-      }));
-
       return;
     }
 
@@ -100,11 +79,6 @@ export default function AssignmentForm({ classId, onSuccess }) {
     setLoadingSubjects(true);
     setErrorSubjects("");
     setSubjects([]);
-
-    setFormData((prev) => ({
-      ...prev,
-      subject_id: "",
-    }));
 
     async function fetchSubjects() {
       try {
@@ -131,59 +105,205 @@ export default function AssignmentForm({ classId, onSuccess }) {
     };
   }, [classId]);
 
+  // Mengubah input
+  function handleChange(e) {
+    const { name, value } = e.target;
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  }
+
+  // Menyimpan tugas baru
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    if (isSubmitting) return;
+
+    if (!formData.title.trim()) {
+      alert("Judul tugas wajib diisi!");
+      return;
+    }
+
+    if (!formData.subject_id) {
+      alert("Mata kuliah wajib dipilih!");
+      return;
+    }
+
+    if (!formData.deadline) {
+      alert("Deadline tugas wajib diisi!");
+      return;
+    }
+
+    const deadline = new Date(formData.deadline);
+    const dateNow = new Date();
+
+    const isDeadlineUnchanged =
+      isEditMode && formData.deadline === toDatetimeLocal(assignment.deadline);
+
+    if (
+      Number.isNaN(deadline.getTime()) ||
+      (!isDeadlineUnchanged && deadline <= dateNow)
+    ) {
+      alert("Deadline harus berupa tanggal valid di masa depan!");
+      return;
+    }
+
+    setIsSubmitting(true);
+    setSubmitError("");
+
+    try {
+      const { data, error } = await supabase.auth.getUser();
+
+      if (error || !data?.user) {
+        throw new Error("Sesi login tidak valid");
+      }
+
+      const userId = data.user.id;
+
+      const assignmentData = {
+        title: formData.title.trim(),
+        description: formData.description.trim(),
+        subject_id: formData.subject_id,
+        class_id: classId,
+        deadline: deadline.toISOString(),
+        created_by: userId,
+      };
+
+      const updates = {
+        title: assignmentData.title,
+        description: assignmentData.description,
+        subject_id: assignmentData.subject_id,
+        deadline: isDeadlineUnchanged
+          ? assignment.deadline
+          : assignmentData.deadline,
+      };
+
+      if (isEditMode) {
+        await updateAssignment(assignment.id, updates);
+      } else {
+        await createAssignment(assignmentData);
+      }
+
+      onSuccess?.();
+    } catch (error) {
+      setSubmitError(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  }
+
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="title"
-        value={formData.title}
-        onChange={handleChange}
-        placeholder="Masukkan judul tugas"
-        className="w-full rounded-lg border border-slate-500 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-      />
-      <textarea
-        name="description"
-        value={formData.description}
-        onChange={handleChange}
-        rows={4}
-        placeholder="Masukkan deskripsi tugas"
-      />
-      <input
-        type="datetime-local"
-        name="deadline"
-        value={formData.deadline}
-        onChange={handleChange}
-      />
-      <select
-        name="subject_id"
-        value={formData.subject_id}
-        onChange={handleChange}
-        disabled={
-          loadingSubjects || Boolean(errorSubjects) || subjects.length === 0
-        }
-        className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:cursor-not-allowed disabled:bg-slate-100"
-      >
-        <option value="" disabled>
-          {loadingSubjects ? "Memuat mata kuliah..." : "Pilih mata kuliah"}
-        </option>
+    <form onSubmit={handleSubmit} className="space-y-4">
+      {/* Judul Tugas */}
+      <div>
+        <label
+          htmlFor="assignment-title"
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
+          Judul Tugas
+        </label>
 
-        {subjects.map((subject) => (
-          <option key={subject.id} value={subject.id}>
-            {subject.name}
+        <input
+          id="assignment-title"
+          type="text"
+          name="title"
+          value={formData.title}
+          onChange={handleChange}
+          placeholder="Masukkan judul tugas"
+          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Mata Kuliah */}
+      <div>
+        <label
+          htmlFor="assignment-subject"
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
+          Mata Kuliah
+        </label>
+
+        <select
+          id="assignment-subject"
+          name="subject_id"
+          value={formData.subject_id}
+          onChange={handleChange}
+          disabled={
+            loadingSubjects || Boolean(errorSubjects) || subjects.length === 0
+          }
+          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100"
+        >
+          <option value="" disabled>
+            {loadingSubjects ? "Memuat mata kuliah..." : "Pilih mata kuliah"}
           </option>
-        ))}
-      </select>
 
-      {errorSubjects && (
-        <p className="mt-2 text-sm text-red-500">{errorSubjects}</p>
+          {subjects.map((subject) => (
+            <option key={subject.id} value={subject.id}>
+              {subject.name}
+            </option>
+          ))}
+        </select>
+
+        {errorSubjects && (
+          <p className="mt-2 text-sm text-red-500">{errorSubjects}</p>
+        )}
+
+        {!loadingSubjects && !errorSubjects && subjects.length === 0 && (
+          <p className="mt-2 text-sm text-slate-500">
+            Belum ada mata kuliah tersedia.
+          </p>
+        )}
+      </div>
+
+      {/* Deskripsi */}
+      <div>
+        <label
+          htmlFor="assignment-description"
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
+          Deskripsi
+        </label>
+
+        <textarea
+          id="assignment-description"
+          name="description"
+          value={formData.description}
+          onChange={handleChange}
+          rows={4}
+          placeholder="Masukkan deskripsi tugas"
+          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Deadline */}
+      <div>
+        <label
+          htmlFor="assignment-deadline"
+          className="mb-1 block text-sm font-medium text-slate-700"
+        >
+          Deadline
+        </label>
+
+        <input
+          id="assignment-deadline"
+          type="datetime-local"
+          name="deadline"
+          value={formData.deadline}
+          onChange={handleChange}
+          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+        />
+      </div>
+
+      {/* Error submit */}
+      {submitError && (
+        <p role="alert" className="text-sm text-red-500">
+          {submitError}
+        </p>
       )}
 
-      {!loadingSubjects && !errorSubjects && subjects.length === 0 && (
-        <p className="mt-2 text-sm text-slate-500">Belum ada mata kuliah</p>
-      )}
-
-      {submitError && <p className="text-sm text-red-500">{submitError}</p>}
-
+      {/* Submit */}
       <button
         type="submit"
         disabled={
@@ -193,17 +313,17 @@ export default function AssignmentForm({ classId, onSuccess }) {
           subjects.length === 0 ||
           !classId
         }
-        className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-blue-500 text-white mt-4 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="w-4 h-4 animate-spin" />
+            <Loader2 className="h-4 w-4 animate-spin" />
             <span>Menyimpan...</span>
           </>
         ) : (
           <>
-            <span>Simpan Tugas</span>
-            <Save className="w-4 h-4" />
+            <Save className="h-4 w-4" />
+            <span>{isEditMode ? "Simpan Perubahan" : "Simpan Tugas"}</span>
           </>
         )}
       </button>

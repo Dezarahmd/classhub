@@ -43,3 +43,17 @@ export async function createAssignment(assignmentData) {
 
   return data
 }
+
+export async function updateAssignment(assignmentId, updates) {
+  const {data, error} = await supabase
+    .from("assignments")
+    .update(updates)
+    .eq("id", assignmentId)
+    .eq("is_active", true)
+    .select()
+    .single()
+
+    if (error) throw error
+
+    return data
+}
