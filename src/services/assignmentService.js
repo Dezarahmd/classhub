@@ -57,3 +57,17 @@ export async function updateAssignment(assignmentId, updates) {
 
     return data
 }
+
+export async function softDeleteAssignment(assignmentId) {
+  const {data, error} = await supabase
+    .from("assignments")
+    .update({is_active: false})
+    .eq("id", assignmentId)
+    .eq("is_active", true)
+    .select()
+    .single()
+
+    if (error) throw error
+
+    return data
+}
