@@ -200,7 +200,7 @@ export default function AssignmentForm({
       <div>
         <label
           htmlFor="assignment-title"
-          className="mb-1 block text-sm font-medium text-slate-700"
+          className="mb-1 block text-sm font-medium text-foreground"
         >
           Judul Tugas
         </label>
@@ -212,7 +212,7 @@ export default function AssignmentForm({
           value={formData.title}
           onChange={handleChange}
           placeholder="Masukkan judul tugas"
-          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -220,7 +220,7 @@ export default function AssignmentForm({
       <div>
         <label
           htmlFor="assignment-subject"
-          className="mb-1 block text-sm font-medium text-slate-700"
+          className="mb-1 block text-sm font-medium text-foreground"
         >
           Mata Kuliah
         </label>
@@ -233,7 +233,7 @@ export default function AssignmentForm({
           disabled={
             loadingSubjects || Boolean(errorSubjects) || subjects.length === 0
           }
-          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:cursor-not-allowed disabled:bg-slate-100"
+          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:bg-neutral-light"
         >
           <option value="" disabled>
             {loadingSubjects ? "Memuat mata kuliah..." : "Pilih mata kuliah"}
@@ -247,11 +247,11 @@ export default function AssignmentForm({
         </select>
 
         {errorSubjects && (
-          <p className="mt-2 text-sm text-red-500">{errorSubjects}</p>
+          <p className="mt-2 text-sm text-danger">{errorSubjects}</p>
         )}
 
         {!loadingSubjects && !errorSubjects && subjects.length === 0 && (
-          <p className="mt-2 text-sm text-slate-500">
+          <p className="mt-2 text-sm text-muted">
             Belum ada mata kuliah tersedia.
           </p>
         )}
@@ -261,7 +261,7 @@ export default function AssignmentForm({
       <div>
         <label
           htmlFor="assignment-description"
-          className="mb-1 block text-sm font-medium text-slate-700"
+          className="mb-1 block text-sm font-medium text-foreground"
         >
           Deskripsi
         </label>
@@ -273,7 +273,7 @@ export default function AssignmentForm({
           onChange={handleChange}
           rows={4}
           placeholder="Masukkan deskripsi tugas"
-          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
@@ -281,7 +281,7 @@ export default function AssignmentForm({
       <div>
         <label
           htmlFor="assignment-deadline"
-          className="mb-1 block text-sm font-medium text-slate-700"
+          className="mb-1 block text-sm font-medium text-foreground"
         >
           Deadline
         </label>
@@ -292,13 +292,13 @@ export default function AssignmentForm({
           name="deadline"
           value={formData.deadline}
           onChange={handleChange}
-          className="w-full rounded-lg border border-slate-300 p-3 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
         />
       </div>
 
       {/* Error submit */}
       {submitError && (
-        <p role="alert" className="text-sm text-red-500">
+        <p role="alert" className="text-sm text-danger">
           {submitError}
         </p>
       )}
@@ -313,7 +313,7 @@ export default function AssignmentForm({
           subjects.length === 0 ||
           !classId
         }
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-blue-500 px-4 py-3 font-medium text-white transition-colors hover:bg-blue-600 disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-medium text-on-primary transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? (
           <>

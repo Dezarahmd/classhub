@@ -99,15 +99,15 @@ export default function TasksPage() {
 
   return (
     <section className="space-y-4">
-      <h1 className="text-3xl font-bold text-slate-900">Daftar Tugas</h1>
+      <h1 className="text-3xl font-bold text-foreground">Daftar Tugas</h1>
 
-      <p className="text-slate-500">
+      <p className="text-muted">
         Kelola dan pantau tugas perkuliahanmu di sini.
       </p>
 
       {canManageTasks && (
         <button
-          className="rounded-lg bg-blue-500 px-4 py-2 text-white hover:bg-blue-600 font-medium"
+          className="rounded-lg bg-primary text-on-primary px-4 py-2 hover:bg-primary-hover font-medium"
           onClick={handleAddAssignment}
         >
           + Tambah Tugas
@@ -144,7 +144,7 @@ export default function TasksPage() {
                 type="button"
                 onClick={handleCancelDelete}
                 disabled={isDeleting}
-                className="bg-gray-200 px-4 py-2 rounded-lg hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="rounded-lg bg-neutral-light px-4 py-2 text-neutral-foreground hover:bg-border transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Batal
               </button>
@@ -152,7 +152,7 @@ export default function TasksPage() {
                 type="button"
                 onClick={handleConfirmDelete}
                 disabled={isDeleting}
-                className="bg-red-500 rounded-lg px-4 py-2 hover:bg-red-600 text-white disabled:opacity-50 disabled:cursor-not-allowed inline-flex items-center justify-center gap-2"
+                className="inline-flex items-center justify-center gap-2 rounded-lg bg-danger px-4 py-2 text-white hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {isDeleting ? (
                   <>
@@ -167,7 +167,7 @@ export default function TasksPage() {
               </button>
             </div>
             {deleteError && (
-              <p role="alert" className="mt-3 text-sm text-red-600">
+              <p role="alert" className="mt-3 text-sm text-danger">
                 {deleteError}
               </p>
             )}
@@ -175,12 +175,12 @@ export default function TasksPage() {
         </div>
       )}
 
-      {loading && <p className="text-slate-500">Memuat daftar tugas...</p>}
+      {loading && <p className="text-muted">Memuat daftar tugas...</p>}
 
-      {errorMessage && <p className="text-red-500">{errorMessage}</p>}
+      {errorMessage && <p className="text-danger">{errorMessage}</p>}
 
       {!loading && !errorMessage && displayedAssignments.length === 0 && (
-        <p className="text-slate-500">Belum ada tugas tersedia.</p>
+        <p className="text-muted">Belum ada tugas tersedia.</p>
       )}
 
       {!loading && !errorMessage && displayedAssignments.length > 0 && (
@@ -188,13 +188,13 @@ export default function TasksPage() {
           {displayedAssignments.map((task) => (
             <div
               key={task.id}
-              className="rounded-xl border border-slate-200 bg-white p-5 shadow-sm hover:shadow-md transition-shadow"
+              className="rounded-xl border border-border bg-surface p-5 shadow-sm hover:shadow-md transition-shadow"
             >
-              <h3 className="text-lg font-semibold text-slate-900">
+              <h3 className="text-lg font-semibold text-foreground">
                 {task.title}
               </h3>
-              <p className="mt-1 text-sm text-slate-500">{task.subjectName}</p>
-              <p className="mt-3 text-sm text-slate-600">
+              <p className="mt-1 text-sm text-muted">{task.subjectName}</p>
+              <p className="mt-3 text-sm text-muted">
                 Deadline:{" "}
                 {new Date(task.deadline).toLocaleString("id-ID", {
                   dateStyle: "medium",
@@ -204,17 +204,17 @@ export default function TasksPage() {
               </p>
               <p className="mt-4">
                 {task.progress === "not_started" && (
-                  <span className="rounded-full bg-slate-100 px-3 py-1 text-xs font-medium text-slate-600">
+                  <span className="rounded-full bg-neutral-light px-3 py-1 text-xs font-medium text-neutral-foreground">
                     Belum Dikerjakan
                   </span>
                 )}
                 {task.progress === "in_progress" && (
-                  <span className="rounded-full bg-blue-100 px-3 py-1 text-xs font-medium text-blue-700">
+                  <span className="rounded-full bg-info-light px-3 py-1 text-xs font-medium text-info">
                     Sedang Dikerjakan
                   </span>
                 )}
                 {task.progress === "completed" && (
-                  <span className="rounded-full bg-green-100 px-3 py-1 text-xs font-medium text-green-700">
+                  <span className="rounded-full bg-success-light px-3 py-1 text-xs font-medium text-success">
                     Selesai
                   </span>
                 )}
@@ -225,7 +225,7 @@ export default function TasksPage() {
                     type="button"
                     onClick={() => handleEditAssignment(task)}
                     aria-label={`Edit tugas ${task.title}`}
-                    className="rounded-lg p-2 text-slate-500 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    className="rounded-lg p-2 text-muted hover:bg-primary-light hover:text-primary-hover transition-colors"
                   >
                     <Pencil className="w-4 h-4" />
                   </button>
@@ -233,7 +233,7 @@ export default function TasksPage() {
                     type="button"
                     onClick={() => handleDeleteClick(task)}
                     aria-label={`Hapus tugas ${task.title}`}
-                    className="rounded-lg p-2 text-slate-500 hover:bg-red-50 hover:text-red-600 transition-colors"
+                    className="rounded-lg p-2 text-muted hover:bg-danger-light hover:text-danger transition-colors"
                   >
                     <Trash2 className="w-4 h-4" />
                   </button>

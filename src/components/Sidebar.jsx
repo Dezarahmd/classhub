@@ -41,19 +41,21 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-slate-200 bg-white p-5">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-sidebar-hover bg-sidebar p-5">
       <div className="mb-10 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-blue-600 font-bold text-white">
+        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary font-bold text-on-primary">
           C
         </div>
 
         <div>
-          <h1 className="text-lg font-bold text-slate-900">ClassHub</h1>
-          <p className="text-xs text-slate-500">Class Management</p>
+          <h1 className="text-lg font-bold text-sidebar-foreground">
+            ClassHub
+          </h1>
+          <p className="text-xs text-sidebar-muted">Class Management</p>
         </div>
       </div>
 
-      <span className="mb-3 text-xs font-semibold uppercase tracking-wider text-slate-400">
+      <span className="mb-3 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
         Menu Utama
       </span>
 
@@ -67,10 +69,10 @@ export default function Sidebar() {
               to={item.path}
               end={item.path === "/"}
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-slate-600 hover:bg-slate-50"
+                    ? "bg-sidebar-active text-sidebar-accent"
+                    : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
                 }`
               }
             >
@@ -81,17 +83,17 @@ export default function Sidebar() {
         })}
         {canManage && (
           <div className="mt-6 space-y-2">
-            <p className="px-4 text-xs font-semibold uppercase tracking-wider text-slate-400">
+            <p className="px-4 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
               Administrasi Kelas
             </p>
 
             <NavLink
               to="/members"
               className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
                   isActive
-                    ? "bg-blue-50 text-blue-700"
-                    : "text-slate-600 hover:bg-slate-50"
+                    ? "bg-sidebar-active text-sidebar-accent"
+                    : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
                 }`
               }
             >
@@ -105,10 +107,10 @@ export default function Sidebar() {
       <NavLink
         to="/settings"
         className={({ isActive }) =>
-          `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition ${
+          `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
             isActive
-              ? "bg-blue-50 text-blue-700"
-              : "text-slate-600 hover:bg-slate-50"
+              ? "bg-sidebar-active text-sidebar-accent"
+              : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
           }`
         }
       >
@@ -118,7 +120,7 @@ export default function Sidebar() {
       <button
         type="button"
         onClick={handleLogout}
-        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-red-600 transition hover:bg-red-50"
+        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-muted transition-colors hover:bg-red-950/40 hover:text-red-400"
       >
         <LogOut size={19} />
         Keluar

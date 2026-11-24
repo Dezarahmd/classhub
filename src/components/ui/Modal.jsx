@@ -95,7 +95,7 @@ export default function Modal({ isOpen, onClose, title, children }) {
       onClick={onClose}
     >
       <div
-        className="bg-white rounded-xl p-6 w-full max-w-lg shadow-xl max-h-[90vh] overflow-y-auto"
+        className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-xl border border-border bg-surface p-6 shadow-xl"
         onClick={(e) => e.stopPropagation()}
         ref={modalRef}
         role="dialog"
@@ -104,14 +104,14 @@ export default function Modal({ isOpen, onClose, title, children }) {
         aria-labelledby={titleId}
       >
         <div className="flex items-center justify-between">
-          <h2 className="text-xl font-semibold text-slate-900" id={titleId}>
+          <h2 className="text-xl font-semibold text-foreground" id={titleId}>
             {title}
           </h2>
           <button
             type="button"
             onClick={onClose}
             aria-label="Tutup Modal"
-            className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900 transition-colors"
+            className="rounded-lg p-2 text-muted transition-colors hover:bg-primary-light hover:text-primary-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary"
           >
             <X size={20} />
           </button>
