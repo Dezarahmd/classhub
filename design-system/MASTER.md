@@ -1,6 +1,6 @@
 # ClassHub — Master Design System
 
-**Version:** 1.1.0  
+**Version:** 1.2.0
 **Design Direction:** Academic Monochrome  
 **Visual Style:** Minimalism & Swiss Style  
 **Product Type:** Academic Management Dashboard  
@@ -104,7 +104,7 @@ Until migration is completed, the approved target palette and implemented palett
 | foreground | #09090B | Primary content |
 | muted | #52525B | Secondary content |
 | border | #E4E4E7 | Decorative borders and dividers |
-| input-border | #A1A1AA | Form control boundaries |
+| input-border | #71717A | Form control boundaries |
 
 ### 3.4 Semantic Colors
 
@@ -773,6 +773,7 @@ External recommendations must not automatically replace approved ClassHub design
 |---|---|
 | 1.0.0 | Initial Modern Orange design system baseline derived from existing ClassHub source code and UI UX Pro Max guidance. |
 | 1.1.0 | Approved Academic Monochrome direction with dark sidebar, black primary actions, blue accents, refined neutral colors, and updated component standards. Implementation pending. |
+| 1.2.0 | Improved input border contrast from #A1A1AA to #71717A for better form accessibility. |
 
 ### Research References
 
@@ -796,7 +797,7 @@ This design system is based on a static review of selected source files, UI UX P
 
 Not all application pages have been audited.
 
-The Academic Monochrome palette has not yet been implemented in the application.
+The Academic Monochrome palette has been implemented in the global design tokens and Sidebar. Migration of the remaining components and pages is in progress.
 
 Selected color combinations have been evaluated conceptually and through contrast calculations, but complete accessibility compliance has not been verified.
 
