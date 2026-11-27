@@ -11,7 +11,20 @@ import {
   EyeOff,
   Loader2,
   LogIn,
+  CircleAlert,
 } from "lucide-react";
+
+const formControlClass =
+  "w-full rounded-lg border border-input-border bg-surface py-2.5 pl-9 text-sm text-foreground placeholder:text-muted transition-colors duration-200 motion-reduce:transition-none focus:border-accent focus:ring-2 focus:ring-accent focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-light";
+
+const formLabelClass =
+  "block text-sm font-medium text-foreground";
+
+const inputIconClass =
+  "pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3 text-muted";
+
+const primaryButtonClass =
+  "mt-2 flex min-h-11 w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-on-primary transition-colors duration-200 motion-reduce:transition-none enabled:hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -77,7 +90,6 @@ export default function Login() {
 
       // 5. Redirect ke Dashboard
       navigate("/", { replace: true });
-
     } catch (err) {
       console.error("Login error:", err);
       setError("Terjadi kesalahan. Silakan coba lagi.");
@@ -87,41 +99,45 @@ export default function Login() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
-      <div className="w-full max-w-sm bg-white shadow-lg px-6 py-8 rounded-2xl">
-
+    <main className="flex min-h-screen items-center justify-center bg-background p-4">
+      <div className="w-full max-w-sm rounded-2xl border border-border bg-surface px-6 py-8 shadow-sm">
         {/* Header */}
-        <div className="mb-8 text-center">
-          <div className="flex justify-center mb-4">
-            <div className="p-3 bg-gray-100 rounded-xl">
-              <GraduationCap className="w-8 h-8 text-blue-500" />
+        <header className="mb-8 text-center">
+          <div className="mb-4 flex justify-center">
+            <div className="rounded-xl bg-primary p-3">
+              <GraduationCap
+                className="h-8 w-8 text-on-primary"
+                aria-hidden="true"
+              />
             </div>
           </div>
 
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-foreground">
             Selamat Datang!
           </h1>
 
-          <p className="text-sm text-gray-500 mt-1">
+          <p className="mt-1 text-sm text-muted">
             Masuk ke akun ClassHub kamu
           </p>
-        </div>
+        </header>
 
         {/* Login Form */}
         <form onSubmit={handleSubmit} className="space-y-4">
-
           {/* Email */}
           <div>
             <label
               htmlFor="email"
-              className="block text-xs font-medium text-gray-700 mb-1"
+              className={`${formLabelClass} mb-2`}
             >
               Email
             </label>
 
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <Mail className="w-4 h-4" />
+              <span className={inputIconClass}>
+                <Mail
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                />
               </span>
 
               <input
@@ -134,29 +150,32 @@ export default function Login() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="nim@bsi.ac.id"
-                className="w-full pl-9 pr-3 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm disabled:opacity-50"
+                className={`${formControlClass} pr-3`}
               />
             </div>
           </div>
 
           {/* Password */}
           <div>
-            <div className="flex items-center justify-between mb-1">
+            <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
               <label
                 htmlFor="password"
-                className="block text-xs font-medium text-gray-700"
+                className={formLabelClass}
               >
                 Password
               </label>
 
-              <a className="text-xs text-gray-500">
+              <span className="text-xs text-muted">
                 Lupa password?
-              </a>
+              </span>
             </div>
 
             <div className="relative">
-              <span className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                <Lock className="w-4 h-4" />
+              <span className={inputIconClass}>
+                <Lock
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                />
               </span>
 
               <input
@@ -169,7 +188,7 @@ export default function Login() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
-                className="w-full pl-9 pr-10 py-2.5 bg-white border border-gray-300 rounded-lg text-gray-900 placeholder:text-gray-400 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-sm disabled:opacity-50"
+                className={`${formControlClass} pr-12`}
               />
 
               <button
@@ -181,12 +200,18 @@ export default function Login() {
                     : "Tampilkan password"
                 }
                 aria-pressed={showPassword}
-                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 hover:text-gray-600"
+                className="absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-r-lg text-muted transition-colors duration-200 motion-reduce:transition-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
               >
                 {showPassword ? (
-                  <EyeOff className="w-4 h-4 hover:text-blue-500" />
+                  <EyeOff
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  />
                 ) : (
-                  <Eye className="w-4 h-4 hover:text-blue-500" />
+                  <Eye
+                    className="h-4 w-4"
+                    aria-hidden="true"
+                  />
                 )}
               </button>
             </div>
@@ -194,39 +219,52 @@ export default function Login() {
 
           {/* Error Message */}
           {error && (
-            <p
+            <div
               role="alert"
-              className="text-sm text-red-600"
+              className="flex items-start gap-2 rounded-lg border border-danger/20 bg-danger-light p-3 text-sm text-danger"
             >
-              {error}
-            </p>
+              <CircleAlert
+                className="mt-0.5 h-4 w-4 shrink-0"
+                aria-hidden="true"
+              />
+
+              <p className="min-w-0 wrap-break-word">
+                {error}
+              </p>
+            </div>
           )}
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full mt-2 py-2.5 px-4 bg-blue-500 hover:bg-blue-600 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
+            className={primaryButtonClass}
           >
             {isLoading ? (
               <>
-                <Loader2 className="w-4 h-4 animate-spin" />
+                <Loader2
+                  className="h-4 w-4 animate-spin motion-reduce:animate-none"
+                  aria-hidden="true"
+                />
                 <span>Memproses...</span>
               </>
             ) : (
               <>
                 <span>Masuk</span>
-                <LogIn className="w-4 h-4" />
+                <LogIn
+                  className="h-4 w-4"
+                  aria-hidden="true"
+                />
               </>
             )}
           </button>
         </form>
 
         {/* Footer */}
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="mt-6 text-center text-xs text-muted">
           Hanya untuk mahasiswa yang terdaftar di ClassHub
         </p>
       </div>
-    </div>
+    </main>
   );
 }
