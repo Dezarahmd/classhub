@@ -27,73 +27,53 @@ export default function AssignmentForm({
 }) {
   const isEditMode = Boolean(assignment);
 
-  // State mata kuliah
-  const [subjects, setSubjects] = useState([]);
-  const [loadingSubjects, setLoadingSubjects] = useState(true);
-  const [errorSubjects, setErrorSubjects] = useState("");
+  // State hasil fetching mata kuliah
+  const [subjectResult, setSubjectResult] = useState(null);
 
+  const isCurrentSubjectResult =
+    Boolean(classId) && subjectResult?.classId === classId;
+
+  const subjects = isCurrentSubjectResult ? subjectResult.data : [];
+
+  const loadingSubjects = Boolean(classId) && !isCurrentSubjectResult;
+
+  const errorSubjects = isCurrentSubjectResult ? subjectResult.error : "";
   // State submit
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
 
   // State form
-  const [formData, setFormData] = useState({
-    title: "",
-    subject_id: "",
-    description: "",
-    deadline: "",
-  });
-
-  // Mengisi form saat Edit, reset saat Create
-  useEffect(() => {
-    if (isEditMode) {
-      setFormData({
-        title: assignment.title ?? "",
-        subject_id: assignment.subject_id ?? "",
-        description: assignment.description ?? "",
-        deadline: toDatetimeLocal(assignment.deadline),
-      });
-    } else {
-      setFormData({
-        title: "",
-        subject_id: "",
-        description: "",
-        deadline: "",
-      });
-    }
-
-    setSubmitError("");
-  }, [assignment, isEditMode]);
+  const [formData, setFormData] = useState(() => ({
+    title: assignment?.title ?? "",
+    subject_id: assignment?.subject_id ?? "",
+    description: assignment?.description ?? "",
+    deadline: toDatetimeLocal(assignment?.deadline),
+  }));
 
   // Mengambil daftar mata kuliah
   useEffect(() => {
-    if (!classId) {
-      setSubjects([]);
-      setLoadingSubjects(false);
-      setErrorSubjects("");
-      return;
-    }
+    if (!classId) return;
 
     let ignore = false;
-
-    setLoadingSubjects(true);
-    setErrorSubjects("");
-    setSubjects([]);
 
     async function fetchSubjects() {
       try {
         const data = await getSubjects(classId);
 
         if (!ignore) {
-          setSubjects(data);
+          setSubjectResult({
+            classId,
+            data,
+            error: "",
+          });
         }
       } catch (error) {
         if (!ignore) {
-          setErrorSubjects(error.message);
-        }
-      } finally {
-        if (!ignore) {
-          setLoadingSubjects(false);
+          setSubjectResult({
+            classId,
+            data: [],
+            error: error.message,
+          });
         }
       }
     }
