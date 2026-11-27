@@ -5,7 +5,7 @@ import { MembershipContext } from "../contexts/MembershipContext";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
-  const [membership, setMembership] = useState(null)
+  const [membership, setMembership] = useState(null);
   const requestId = useRef(0);
 
   useEffect(() => {
@@ -15,7 +15,7 @@ export default function ProtectedRoute({ children }) {
     async function checkAccess() {
       const currentRequestId = ++requestId.current;
 
-      setMembership(null)
+      setMembership(null);
       setStatus("loading");
 
       try {
@@ -27,8 +27,18 @@ export default function ProtectedRoute({ children }) {
         if (!active || currentRequestId !== requestId.current) {
           return;
         }
+        if (userError) {
+          if (userError.name === "AuthSessionMissingError") {
+            setStatus("unauthenticated");
+          } else {
+            console.error("Gagal memeriksa autentikasi:", userError.name);
+            setStatus("error");
+          }
 
-        if (userError || !user) {
+          return;
+        }
+
+        if (!user) {
           setStatus("unauthenticated");
           return;
         }
@@ -67,7 +77,7 @@ export default function ProtectedRoute({ children }) {
 
       if (event === "SIGNED_OUT") {
         requestTracker.current++;
-        setMembership(null)
+        setMembership(null);
         setStatus("unauthenticated");
       }
 
@@ -111,5 +121,5 @@ export default function ProtectedRoute({ children }) {
     <MembershipContext.Provider value={membership}>
       {children}
     </MembershipContext.Provider>
-  )
+  );
 }
