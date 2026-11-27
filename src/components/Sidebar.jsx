@@ -1,3 +1,4 @@
+
 import {
   LayoutDashboard,
   ClipboardList,
@@ -23,6 +24,17 @@ const menuItems = [
   { label: "Pengumuman", icon: Bell, path: "/announcements" },
 ];
 
+const navigationBaseClass =
+  "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors duration-200 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-sidebar-accent focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar";
+
+function getNavigationClass({ isActive }) {
+  return `${navigationBaseClass} ${
+    isActive
+      ? "bg-sidebar-active text-sidebar-accent"
+      : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
+  }`;
+}
+
 export default function Sidebar() {
   const navigate = useNavigate();
   const membership = useMembership();
@@ -41,9 +53,13 @@ export default function Sidebar() {
   }
 
   return (
-    <aside className="flex min-h-screen w-64 flex-col border-r border-sidebar-hover bg-sidebar p-5">
+    <aside className="flex min-h-screen w-64 flex-col border-r border-sidebar-border bg-sidebar p-5">
+      {/* Brand */}
       <div className="mb-10 flex items-center gap-3">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary font-bold text-on-primary">
+        <div
+          aria-hidden="true"
+          className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-sidebar-foreground font-bold text-sidebar"
+        >
           C
         </div>
 
@@ -51,7 +67,9 @@ export default function Sidebar() {
           <h1 className="text-lg font-bold text-sidebar-foreground">
             ClassHub
           </h1>
-          <p className="text-xs text-sidebar-muted">Class Management</p>
+          <p className="text-xs text-sidebar-muted">
+            Class Management
+          </p>
         </div>
       </div>
 
@@ -59,7 +77,8 @@ export default function Sidebar() {
         Menu Utama
       </span>
 
-      <nav className="flex-1 space-y-2">
+      {/* Main Navigation */}
+      <nav aria-label="Navigasi utama" className="flex-1 space-y-2">
         {menuItems.map((item) => {
           const Icon = item.icon;
 
@@ -68,19 +87,14 @@ export default function Sidebar() {
               key={item.label}
               to={item.path}
               end={item.path === "/"}
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-sidebar-active text-sidebar-accent"
-                    : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
-                }`
-              }
+              className={getNavigationClass}
             >
-              <Icon size={19} />
+              <Icon size={19} aria-hidden="true" />
               {item.label}
             </NavLink>
           );
         })}
+
         {canManage && (
           <div className="mt-6 space-y-2">
             <p className="px-4 text-xs font-semibold uppercase tracking-wider text-sidebar-muted">
@@ -89,42 +103,34 @@ export default function Sidebar() {
 
             <NavLink
               to="/members"
-              className={({ isActive }) =>
-                `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-                  isActive
-                    ? "bg-sidebar-active text-sidebar-accent"
-                    : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
-                }`
-              }
+              className={getNavigationClass}
             >
-              <Users size={19} />
+              <Users size={19} aria-hidden="true" />
               Kelola Anggota
             </NavLink>
           </div>
         )}
       </nav>
 
-      <NavLink
-        to="/settings"
-        className={({ isActive }) =>
-          `flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors ${
-            isActive
-              ? "bg-sidebar-active text-sidebar-accent"
-              : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
-          }`
-        }
-      >
-        <Settings size={19} />
-        Pengaturan
-      </NavLink>
-      <button
-        type="button"
-        onClick={handleLogout}
-        className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-sidebar-muted transition-colors hover:bg-red-950/40 hover:text-red-400"
-      >
-        <LogOut size={19} />
-        Keluar
-      </button>
+      {/* Account Navigation */}
+      <nav aria-label="Navigasi akun">
+        <NavLink
+          to="/settings"
+          className={getNavigationClass}
+        >
+          <Settings size={19} aria-hidden="true" />
+          Pengaturan
+        </NavLink>
+
+        <button
+          type="button"
+          onClick={handleLogout}
+          className={`${navigationBaseClass} w-full cursor-pointer text-sidebar-muted hover:bg-red-950/40 hover:text-red-400`}
+        >
+          <LogOut size={19} aria-hidden="true" />
+          Keluar
+        </button>
+      </nav>
     </aside>
   );
 }
