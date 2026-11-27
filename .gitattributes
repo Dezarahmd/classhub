@@ -1,0 +1,14 @@
+# UI UX Pro Max line endings
+.codex/skills/ui-ux-pro-max/**/*.csv text eol=lf
+.codex/skills/ui-ux-pro-max/**/*.py text eol=lf
+.codex/skills/ui-ux-pro-max/**/*.md text eol=lf
+
+# Preserve upstream formatting
+.codex/skills/ui-ux-pro-max/scripts/design_system.py whitespace=-blank-at-eol
+.codex/skills/ui-ux-pro-max/scripts/search.py whitespace=-blank-at-eol
+
+# ClassHub design system
+design-system/**/*.md text eol=lf
+
+# Preserve Markdown hard line breaks
+design-system/MASTER.md whitespace=-blank-at-eol
