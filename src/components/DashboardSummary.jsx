@@ -116,11 +116,12 @@ export default function DashboardSummary() {
 
       {/* Deadline terdekat */}
       <section className="rounded-2xl border border-border bg-surface p-5 shadow-sm sm:p-6">
-        <div className="mb-5 flex items-center justify-between gap-3">
-          <div>
-            <h3 className="text-lg font-bold text-foreground">
+        <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+          <div className="min-w-0">
+            <h2 className="text-lg font-semibold text-foreground">
               Deadline Terdekat
-            </h3>
+            </h2>
+
             <p className="mt-1 text-sm text-muted">
               Jangan sampai ada tugas yang terlewat.
             </p>
@@ -128,10 +129,10 @@ export default function DashboardSummary() {
 
           <button
             type="button"
-            className="flex shrink-0 cursor-pointer items-center gap-2 text-sm font-semibold text-primary-hover transition-colors hover:text-foreground"
+            className="inline-flex shrink-0 cursor-pointer items-center gap-2 rounded-lg px-2 py-1 text-sm font-medium text-accent transition-colors duration-200 motion-reduce:transition-none hover:bg-accent-light hover:text-accent-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
           >
             Lihat semua
-            <ArrowRight size={16} />
+            <ArrowRight size={16} aria-hidden="true" />
           </button>
         </div>
 
@@ -141,31 +142,29 @@ export default function DashboardSummary() {
               key={task.title}
               className="flex flex-col gap-3 py-4 first:pt-0 last:pb-0 sm:flex-row sm:items-center sm:justify-between"
             >
-              <div className="flex items-start gap-3">
+              <div className="flex min-w-0 items-start gap-3">
                 <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary-light text-primary">
-                  <CalendarDays size={19} />
+                  <CalendarDays size={19} aria-hidden="true" />
                 </div>
 
-                <div>
-                  <h4 className="font-semibold text-foreground">
+                <div className="min-w-0">
+                  <h3 className="wrap-break-word font-semibold text-foreground">
                     {task.title}
-                  </h4>
+                  </h3>
+
                   <p className="mt-1 text-sm text-muted">
                     {task.subject}
                   </p>
-                  <span className="hidden text-sm text-muted sm:block">
+
+                  <p className="mt-1 text-xs text-muted">
                     Deadline: {task.deadline}
-                  </span>
+                  </p>
                 </div>
               </div>
 
-              <div className="flex items-center justify-between gap-3 sm:justify-end">
-                <span className="hidden text-sm text-slate-500 sm:block">
-                  {task.deadline}
-                </span>
-
+              <div className="flex shrink-0 items-center pl- sm:justify-end sm:pl-0">
                 <span
-                  className={`rounded-full px-3 py-1 text-xs font-semibold ${task.statusColor}`}
+                  className={`rounded-full px-3 py-1 text-xs font-medium ${task.statusColor}`}
                 >
                   {task.status}
                 </span>
