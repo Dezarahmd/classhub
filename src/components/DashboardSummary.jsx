@@ -1,3 +1,4 @@
+
 import {
   ClipboardList,
   Clock3,
@@ -20,7 +21,7 @@ const summaryItems = [
     value: 5,
     description: "Tugas belum selesai",
     icon: Clock3,
-    color: "bg-warning-light text-warning",
+    color: "bg-info-light text-info",
   },
   {
     title: "Tugas Selesai",
@@ -68,7 +69,10 @@ export default function DashboardSummary() {
       {/* Ringkasan tugas */}
       <section>
         <div className="mb-4">
-          <h3 className="text-lg font-bold text-foreground">Ringkasan Tugas</h3>
+          <h2 className="text-lg font-semibold text-foreground">
+            Ringkasan Tugas
+          </h2>
+
           <p className="mt-1 text-sm text-muted">
             Gambaran umum progres tugas kelasmu.
           </p>
@@ -81,25 +85,29 @@ export default function DashboardSummary() {
             return (
               <div
                 key={item.title}
-                className="rounded-2xl border border-border bg-surface p-5 shadow-sm transition-all duration-200 hover:-translate-y-1 hover:shadow-md"
+                className="min-w-0 rounded-2xl border border-border bg-surface p-5 shadow-sm"
               >
-                <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-3">
                   <div
-                    className={`flex h-11 w-11 items-center justify-center rounded-xl ${item.color}`}
+                    className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-xl ${item.color}`}
                   >
-                    <Icon size={21} />
+                    <Icon size={21} aria-hidden="true" />
                   </div>
-                  <span className="text-2xl font-bold text-slate-900">
+
+                  <span className="text-2xl font-bold tabular-nums text-foreground">
                     {item.value}
                   </span>
                 </div>
 
-                <h4 className="mt-4 font-semibold text-slate-800">
-                  {item.title}
-                </h4>
-                <p className="mt-1 text-sm text-slate-500">
-                  {item.description}
-                </p>
+                <div className="mt-4">
+                  <h3 className="text-sm font-semibold text-foreground">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-1 text-xs text-muted">
+                    {item.description}
+                  </p>
+                </div>
               </div>
             );
           })}
@@ -142,7 +150,9 @@ export default function DashboardSummary() {
                   <h4 className="font-semibold text-foreground">
                     {task.title}
                   </h4>
-                  <p className="mt-1 text-sm text-muted">{task.subject}</p>
+                  <p className="mt-1 text-sm text-muted">
+                    {task.subject}
+                  </p>
                   <span className="hidden text-sm text-muted sm:block">
                     Deadline: {task.deadline}
                   </span>
