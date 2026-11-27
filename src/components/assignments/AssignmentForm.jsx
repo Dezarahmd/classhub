@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { getSubjects } from "../../services/subjectService";
 import { supabase } from "../../lib/supabase";
@@ -6,6 +7,9 @@ import {
   updateAssignment,
 } from "../../services/assignmentService";
 import { Save, Loader2 } from "lucide-react";
+
+const formControlClass =
+  "w-full rounded-lg border border-input-border bg-surface px-3 py-2.5 text-sm text-foreground placeholder:text-muted transition-colors duration-200 motion-reduce:transition-none focus:border-accent focus:ring-2 focus:ring-accent focus:outline-none disabled:cursor-not-allowed disabled:bg-neutral-light";
 
 // Mengubah timestamp Supabase menjadi format datetime-local
 function toDatetimeLocal(value) {
@@ -38,6 +42,7 @@ export default function AssignmentForm({
   const loadingSubjects = Boolean(classId) && !isCurrentSubjectResult;
 
   const errorSubjects = isCurrentSubjectResult ? subjectResult.error : "";
+
   // State submit
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitError, setSubmitError] = useState("");
@@ -95,7 +100,7 @@ export default function AssignmentForm({
     }));
   }
 
-  // Menyimpan tugas baru
+  // Menyimpan tugas
   async function handleSubmit(e) {
     e.preventDefault();
 
@@ -192,7 +197,7 @@ export default function AssignmentForm({
           value={formData.title}
           onChange={handleChange}
           placeholder="Masukkan judul tugas"
-          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+          className={formControlClass}
         />
       </div>
 
@@ -213,7 +218,7 @@ export default function AssignmentForm({
           disabled={
             loadingSubjects || Boolean(errorSubjects) || subjects.length === 0
           }
-          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary disabled:cursor-not-allowed disabled:bg-neutral-light"
+          className={formControlClass}
         >
           <option value="" disabled>
             {loadingSubjects ? "Memuat mata kuliah..." : "Pilih mata kuliah"}
@@ -253,7 +258,7 @@ export default function AssignmentForm({
           onChange={handleChange}
           rows={4}
           placeholder="Masukkan deskripsi tugas"
-          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+          className={formControlClass}
         />
       </div>
 
@@ -272,7 +277,7 @@ export default function AssignmentForm({
           name="deadline"
           value={formData.deadline}
           onChange={handleChange}
-          className="w-full rounded-lg border border-border bg-surface p-3 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
+          className={formControlClass}
         />
       </div>
 
@@ -293,16 +298,19 @@ export default function AssignmentForm({
           subjects.length === 0 ||
           !classId
         }
-        className="flex w-full items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-medium text-on-primary transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50"
+        className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-xl bg-primary px-4 py-3 font-medium text-on-primary transition-colors duration-200 motion-reduce:transition-none enabled:hover:bg-primary-hover focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
       >
         {isSubmitting ? (
           <>
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2
+              className="h-4 w-4 animate-spin motion-reduce:animate-none"
+              aria-hidden="true"
+            />
             <span>Menyimpan...</span>
           </>
         ) : (
           <>
-            <Save className="h-4 w-4" />
+            <Save className="h-4 w-4" aria-hidden="true" />
             <span>{isEditMode ? "Simpan Perubahan" : "Simpan Tugas"}</span>
           </>
         )}
