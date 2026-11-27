@@ -7,7 +7,13 @@ import {
 } from "../services/assignmentService";
 import Modal from "../components/ui/Modal";
 import AssignmentForm from "../components/assignments/AssignmentForm";
-import { Plus, Pencil, Trash2, Loader2 } from "lucide-react";
+import {
+  Plus,
+  Pencil,
+  Trash2,
+  Loader2,
+  CalendarDays,
+} from "lucide-react";
 
 const buttonBaseClass =
   "inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium transition-colors duration-200 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50";
@@ -229,75 +235,92 @@ export default function TasksPage() {
         displayedAssignments.length > 0 && (
           <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {displayedAssignments.map((task) => (
-              <div
+              <article
                 key={task.id}
-                className="rounded-xl border border-border bg-surface p-5 shadow-sm hover:shadow-md transition-shadow"
+                className="flex min-w-0 flex-col rounded-xl border border-border bg-surface p-5 shadow-sm"
               >
-                <h3 className="text-lg font-semibold text-foreground">
-                  {task.title}
-                </h3>
+                {/* Identitas tugas */}
+                <div className="min-w-0">
+                  <h2 className="break-words text-lg font-semibold text-foreground">
+                    {task.title}
+                  </h2>
 
-                <p className="mt-1 text-sm text-muted">
-                  {task.subjectName}
-                </p>
+                  <p className="mt-1 break-words text-sm text-muted">
+                    {task.subjectName}
+                  </p>
+                </div>
 
-                <p className="mt-3 text-sm text-muted">
-                  Deadline:{" "}
-                  {new Date(task.deadline).toLocaleString("id-ID", {
-                    dateStyle: "medium",
-                    timeStyle: "short",
-                    timeZone: "Asia/Jakarta",
-                  })}
-                </p>
+                {/* Informasi deadline */}
+                <div className="mt-4 flex items-start gap-2 text-sm text-muted">
+                  <CalendarDays
+                    size={16}
+                    className="mt-0.5 shrink-0"
+                    aria-hidden="true"
+                  />
 
-                <p className="mt-4">
-                  {task.progress === "not_started" && (
-                    <span className="rounded-full bg-neutral-light px-3 py-1 text-xs font-medium text-neutral-foreground">
-                      Belum Dikerjakan
-                    </span>
-                  )}
+                  <p>
+                    Deadline:{" "}
+                    {new Date(task.deadline).toLocaleString("id-ID", {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                      timeZone: "Asia/Jakarta",
+                    })}
+                  </p>
+                </div>
 
-                  {task.progress === "in_progress" && (
-                    <span className="rounded-full bg-info-light px-3 py-1 text-xs font-medium text-info">
-                      Sedang Dikerjakan
-                    </span>
-                  )}
+                {/* Footer tugas */}
+                <div className="mt-auto pt-4">
+                  <div className="flex flex-wrap items-center justify-between gap-3 border-t border-border pt-4">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {task.progress === "not_started" && (
+                        <span className="rounded-full bg-neutral-light px-3 py-1 text-xs font-medium text-neutral-foreground">
+                          Belum Dikerjakan
+                        </span>
+                      )}
 
-                  {task.progress === "completed" && (
-                    <span className="rounded-full bg-success-light px-3 py-1 text-xs font-medium text-success">
-                      Selesai
-                    </span>
-                  )}
-                </p>
+                      {task.progress === "in_progress" && (
+                        <span className="rounded-full bg-info-light px-3 py-1 text-xs font-medium text-info">
+                          Sedang Dikerjakan
+                        </span>
+                      )}
 
-                {canManageTasks && (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => handleEditAssignment(task)}
-                      aria-label={`Edit tugas ${task.title}`}
-                      className={`${iconButtonClass} hover:bg-primary-light hover:text-primary-hover`}
-                    >
-                      <Pencil
-                        className="h-4 w-4"
-                        aria-hidden="true"
-                      />
-                    </button>
+                      {task.progress === "completed" && (
+                        <span className="rounded-full bg-success-light px-3 py-1 text-xs font-medium text-success">
+                          Selesai
+                        </span>
+                      )}
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteClick(task)}
-                      aria-label={`Hapus tugas ${task.title}`}
-                      className={`${iconButtonClass} hover:bg-danger-light hover:text-danger`}
-                    >
-                      <Trash2
-                        className="h-4 w-4"
-                        aria-hidden="true"
-                      />
-                    </button>
-                  </>
-                )}
-              </div>
+                    {canManageTasks && (
+                      <div className="ml-auto flex items-center gap-1">
+                        <button
+                          type="button"
+                          onClick={() => handleEditAssignment(task)}
+                          aria-label={`Edit tugas ${task.title}`}
+                          className={`${iconButtonClass} hover:bg-primary-light hover:text-primary-hover`}
+                        >
+                          <Pencil
+                            className="h-4 w-4"
+                            aria-hidden="true"
+                          />
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteClick(task)}
+                          aria-label={`Hapus tugas ${task.title}`}
+                          className={`${iconButtonClass} hover:bg-danger-light hover:text-danger`}
+                        >
+                          <Trash2
+                            className="h-4 w-4"
+                            aria-hidden="true"
+                          />
+                        </button>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </article>
             ))}
           </div>
         )}
