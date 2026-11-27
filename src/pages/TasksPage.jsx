@@ -241,11 +241,11 @@ export default function TasksPage() {
               >
                 {/* Identitas tugas */}
                 <div className="min-w-0">
-                  <h2 className="break-words text-lg font-semibold text-foreground">
+                  <h2 className="wrap-break-word text-lg font-semibold text-foreground">
                     {task.title}
                   </h2>
 
-                  <p className="mt-1 break-words text-sm text-muted">
+                  <p className="mt-1 wrap-break-word text-sm text-muted">
                     {task.subjectName}
                   </p>
                 </div>
