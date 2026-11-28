@@ -1,7 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Navigate } from "react-router";
+import { Loader2, ShieldAlert, CircleAlert } from "lucide-react";
 import { supabase } from "../lib/supabase";
 import { MembershipContext } from "../contexts/MembershipContext";
+
+const feedbackClass =
+  "flex items-center justify-center gap-2 p-6 text-center text-sm";
 
 export default function ProtectedRoute({ children }) {
   const [status, setStatus] = useState("loading");
@@ -27,11 +31,15 @@ export default function ProtectedRoute({ children }) {
         if (!active || currentRequestId !== requestId.current) {
           return;
         }
+
         if (userError) {
           if (userError.name === "AuthSessionMissingError") {
             setStatus("unauthenticated");
           } else {
-            console.error("Gagal memeriksa autentikasi:", userError.name);
+            console.error(
+              "Gagal memeriksa autentikasi:",
+              userError.name
+            );
             setStatus("error");
           }
 
@@ -58,8 +66,11 @@ export default function ProtectedRoute({ children }) {
           setStatus("error");
           return;
         }
+
         setMembership(data?.[0] ?? null);
-        setStatus(data && data.length > 0 ? "authorized" : "forbidden");
+        setStatus(
+          data && data.length > 0 ? "authorized" : "forbidden"
+        );
       } catch (error) {
         console.error("Pemeriksaan akses gagal:", error);
 
@@ -68,6 +79,7 @@ export default function ProtectedRoute({ children }) {
         }
       }
     }
+
     checkAccess();
 
     const {
@@ -94,7 +106,18 @@ export default function ProtectedRoute({ children }) {
   }, []);
 
   if (status === "loading") {
-    return <p className="p-6 text-center">Memeriksa akses...</p>;
+    return (
+      <div
+        role="status"
+        className={`${feedbackClass} text-muted`}
+      >
+        <Loader2
+          className="h-5 w-5 shrink-0 animate-spin motion-reduce:animate-none"
+          aria-hidden="true"
+        />
+        <p>Memeriksa akses...</p>
+      </div>
+    );
   }
 
   if (status === "unauthenticated") {
@@ -103,17 +126,31 @@ export default function ProtectedRoute({ children }) {
 
   if (status === "forbidden") {
     return (
-      <p className="p-6 text-center text-red-600">
-        Akun kamu belum terdaftar sebagai anggota kelas.
-      </p>
+      <div
+        role="alert"
+        className={`${feedbackClass} text-danger`}
+      >
+        <ShieldAlert
+          className="h-5 w-5 shrink-0"
+          aria-hidden="true"
+        />
+        <p>Akun kamu belum terdaftar sebagai anggota kelas.</p>
+      </div>
     );
   }
 
   if (status === "error") {
     return (
-      <p className="p-6 text-center text-red-600">
-        Gagal memeriksa akses. Silakan refresh halaman.
-      </p>
+      <div
+        role="alert"
+        className={`${feedbackClass} text-danger`}
+      >
+        <CircleAlert
+          className="h-5 w-5 shrink-0"
+          aria-hidden="true"
+        />
+        <p>Gagal memeriksa akses. Silakan refresh halaman.</p>
+      </div>
     );
   }
 
