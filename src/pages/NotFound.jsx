@@ -1,3 +1,4 @@
+
 import { Link, useNavigate } from "react-router";
 
 const buttonBaseClass =
@@ -27,7 +28,14 @@ export default function NotFound() {
           Alamat yang kamu buka tidak tersedia atau sudah dipindahkan.
         </p>
 
-        <div className="mt-8 flex w-full flex-col-reverse gap-3 sm:w-auto sm:flex-row">
+        <div className="mt-8 flex w-full flex-col gap-3 sm:w-auto sm:flex-row">
+          <Link
+            to="/"
+            className={primaryButtonClass}
+          >
+            Kembali ke Dashboard
+          </Link>
+
           <button
             type="button"
             onClick={() => navigate(-1)}
@@ -35,13 +43,6 @@ export default function NotFound() {
           >
             Halaman sebelumnya
           </button>
-
-          <Link
-            to="/"
-            className={primaryButtonClass}
-          >
-            Kembali ke Dashboard
-          </Link>
         </div>
       </div>
     </main>
