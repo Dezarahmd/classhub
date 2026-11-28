@@ -1,6 +1,6 @@
 # ClassHub — Master Design System
 
-**Version:** 1.3.0
+**Version:** 1.4.0
 **Design Direction:** Academic Monochrome  
 **Visual Style:** Minimalism & Swiss Style  
 **Product Type:** Academic Management Dashboard  
@@ -210,6 +210,7 @@ Typography should provide the primary visual hierarchy within the monochromatic 
 
 - Maintain a clear heading hierarchy.
 - Use semantic HTML heading elements.
+- Reserve the page-level heading for main page content; sidebar branding uses non-heading text.
 - Avoid excessive font weights and sizes.
 - Use foreground tokens for primary text.
 - Use muted tokens for secondary information.
@@ -308,6 +309,8 @@ The current application shell consists of a sidebar and main content area.
 | Desktop layout breakpoint | 768px |
 | Main content scrolling | Vertical |
 
+Provide a keyboard-accessible skip link before sidebar navigation. Keep it visually hidden until focused and move focus to the main content landmark when activated. Use `tabIndex={-1}` on the main landmark for programmatic focus without adding a sequential tab stop.
+
 ### 9.2 Sidebar
 
 The approved design uses a dark sidebar with controlled blue accents.
@@ -329,7 +332,7 @@ The approved design uses a dark sidebar with controlled blue accents.
 - Logout hover content: sidebar-danger.
 - Logout keyboard focus: sidebar-accent with sidebar ring offset.
 
-Use appropriate active navigation semantics, including `aria-current` where applicable.
+Use appropriate active navigation semantics, including `aria-current` where applicable. Active navigation also uses a visible vertical indicator with the sidebar-accent token, so selection is not conveyed by color changes alone.
 
 Preserve role-based navigation and permission checks.
 
@@ -494,7 +497,8 @@ Required standards:
 
 - Associate every input with an accessible label.
 - Provide clear validation feedback.
-- Indicate required fields.
+- Indicate required fields visually and programmatically.
+- AssignmentForm currently uses `aria-required="true"` for title, subject, and deadline; description remains optional. Existing JavaScript validation is preserved. Visual required-field indicators and inline validation remain future improvements.
 - Preserve entered values when recoverable errors occur.
 - Provide loading and empty states for asynchronous selections.
 - Prevent duplicate submissions.
@@ -563,6 +567,8 @@ Preserve:
 - Error feedback.
 - Redirect behavior.
 
+Password visibility controls use an action-oriented accessible name that changes between show and hide, without `aria-pressed`. Provide a persistent `role="status"` region for login processing feedback.
+
 Authentication styling changes must not modify authentication business logic without explicit approval.
 
 ### 10.10 Links and Interactive Accents
@@ -575,6 +581,10 @@ Authentication styling changes must not modify authentication business logic wit
 - Underline text links where necessary to avoid relying on color alone.
 
 Use sidebar-accent for appropriate interactions on dark sidebar surfaces.
+
+### 10.11 NotFound Page
+
+Place the primary dashboard link before the secondary previous-page button in both DOM and visual order at all breakpoints. Preserve visible keyboard focus and existing navigation behavior. Avoid CSS reversal that makes visual and sequential focus order inconsistent.
 
 ## 11. Interaction and Motion
 
@@ -649,6 +659,15 @@ Target WCAG 2.2 Level AA where applicable.
 - Maintain applicable 3:1 non-text contrast requirements.
 - Meet applicable minimum target-size requirements.
 - Prefer 44px touch targets where practical.
+
+### Language, Navigation, and Dynamic Feedback
+
+- Set the document language to Indonesian (`lang="id"`) for the current interface.
+- Provide a skip navigation link and logical DOM-based focus order. Avoid positive tabindex values.
+- Use persistent `role="status"` regions for non-urgent asynchronous feedback and `role="alert"` for relevant errors.
+- TasksPage uses status feedback for loading, empty results, and deletion processing, with alert semantics for fetch and delete errors.
+- AssignmentForm uses status feedback for subject loading, empty results, and saving, with alert semantics for subject and submit errors.
+- Preserve visible feedback and avoid redundant announcements where practical. Test actual announcements with assistive technology; initial content in a newly mounted live region may not be announced.
 
 ### Color Accessibility
 
@@ -743,6 +762,10 @@ External recommendations must not automatically replace approved ClassHub design
 
 - [ ] Accessible labels provided.
 - [ ] Keyboard navigation verified.
+- [ ] Document language and heading hierarchy verified.
+- [ ] Skip navigation and logical visual/focus order verified.
+- [ ] Required-field semantics and visible instructions verified.
+- [ ] Dynamic feedback announcements verified with assistive technology where applicable.
 - [ ] Focus indicators visible.
 - [ ] Color contrast verified.
 - [ ] Form control boundaries verified.
@@ -790,6 +813,7 @@ External recommendations must not automatically replace approved ClassHub design
 | 1.1.0 | Approved Academic Monochrome direction with dark sidebar, black primary actions, blue accents, refined neutral colors, and updated component standards. Implementation pending. |
 | 1.2.0 | Improved input border contrast from #A1A1AA to #71717A for better form accessibility. |
 | 1.3.0 | Updated danger from #DC2626 to #B91C1C to improve normal-text contrast on danger-light. Added danger-hover, on-danger, sidebar-danger, and sidebar-danger-light tokens and standardized destructive button and logout hover colors. Browser verification pending. |
+| 1.4.0 | Documented Indonesian language, skip navigation, sidebar active indicators, login semantics, NotFound focus order, task and form dynamic feedback, and required-field semantics. Targeted browser checks reported successful; assistive technology verification remains pending. |
 
 ### Research References
 
@@ -817,7 +841,9 @@ The Academic Monochrome palette has been implemented in the global design tokens
 
 Selected color combinations have been evaluated conceptually and through contrast calculations, but complete accessibility compliance has not been verified.
 
-Browser rendering, keyboard interactions, responsive behavior, and production builds require verification during implementation.
+Targeted keyboard and browser regression checks for accessibility remediation were reported successful by the developer. Static ARIA changes were reviewed. Full screen reader testing, actual empty assignment and subject states, complete responsive and role-based verification, and WCAG 2.2 AA conformance remain unverified. Initial live-region announcements may vary by assistive technology. Visual required-field indicators, inline validation, inactive password recovery, and disabled/loading readability review remain deferred.
+
+Broader implementation-status and backlog reconciliation is reserved for Step 2.9.7.
 
 This document distinguishes existing implementation patterns from approved target standards and planned improvements.
 
