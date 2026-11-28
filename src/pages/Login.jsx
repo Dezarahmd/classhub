@@ -199,7 +199,6 @@ export default function Login() {
                     ? "Sembunyikan password"
                     : "Tampilkan password"
                 }
-                aria-pressed={showPassword}
                 className="absolute inset-y-0 right-0 flex w-11 cursor-pointer items-center justify-center rounded-r-lg text-muted transition-colors duration-200 motion-reduce:transition-none hover:text-foreground focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent"
               >
                 {showPassword ? (
@@ -259,6 +258,11 @@ export default function Login() {
             )}
           </button>
         </form>
+
+        {/* Accessible Loading Announcement */}
+        <div role="status" className="sr-only">
+          {isLoading ? "Sedang memproses login." : ""}
+        </div>
 
         {/* Footer */}
         <p className="mt-6 text-center text-xs text-muted">
