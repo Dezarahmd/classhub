@@ -28,9 +28,9 @@ const navigationBaseClass =
   "flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-medium transition-colors duration-200 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-sidebar-accent focus-visible:ring-offset-2 focus-visible:ring-offset-sidebar";
 
 function getNavigationClass({ isActive }) {
-  return `${navigationBaseClass} ${
+  return `${navigationBaseClass} relative pr-7 ${
     isActive
-      ? "bg-sidebar-active text-sidebar-accent"
+      ? "bg-sidebar-active text-sidebar-accent after:absolute after:right-2 after:top-1/2 after:h-5 after:w-0.75 after:-translate-y-1/2 after:rounded-full after:bg-sidebar-accent after:content-['']"
       : "text-sidebar-muted hover:bg-sidebar-hover hover:text-sidebar-foreground"
   }`;
 }
@@ -64,9 +64,9 @@ export default function Sidebar() {
         </div>
 
         <div>
-          <h1 className="text-lg font-bold text-sidebar-foreground">
+          <p className="text-lg font-bold text-sidebar-foreground">
             ClassHub
-          </h1>
+          </p>
           <p className="text-xs text-sidebar-muted">
             Class Management
           </p>
