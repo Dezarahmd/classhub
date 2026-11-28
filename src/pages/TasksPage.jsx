@@ -25,7 +25,7 @@ const secondaryButtonClass =
   `${buttonBaseClass} border border-input-border bg-surface text-foreground enabled:hover:bg-primary-light`;
 
 const dangerButtonClass =
-  `${buttonBaseClass} bg-danger text-white enabled:hover:bg-red-700`;
+  `${buttonBaseClass} bg-danger text-on-danger enabled:hover:bg-danger-hover`;
 
 const iconButtonClass =
   "inline-flex cursor-pointer items-center justify-center rounded-lg p-2 text-muted transition-colors duration-200 motion-reduce:transition-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2";

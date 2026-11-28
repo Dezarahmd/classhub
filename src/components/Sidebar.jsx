@@ -125,7 +125,7 @@ export default function Sidebar() {
         <button
           type="button"
           onClick={handleLogout}
-          className={`${navigationBaseClass} w-full cursor-pointer text-sidebar-muted hover:bg-red-950/40 hover:text-red-400`}
+          className={`${navigationBaseClass} w-full cursor-pointer text-sidebar-muted hover:bg-sidebar-danger-light hover:text-sidebar-danger`}
         >
           <LogOut size={19} aria-hidden="true" />
           Keluar

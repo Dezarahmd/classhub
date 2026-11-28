@@ -1,6 +1,6 @@
 # ClassHub — Master Design System
 
-**Version:** 1.2.0
+**Version:** 1.3.0
 **Design Direction:** Academic Monochrome  
 **Visual Style:** Minimalism & Swiss Style  
 **Product Type:** Academic Management Dashboard  
@@ -94,6 +94,8 @@ Until migration is completed, the approved target palette and implemented palett
 | sidebar-muted | #A1A1AA | Secondary sidebar text |
 | sidebar-accent | #93C5FD | Active navigation content |
 | sidebar-border | #3F3F46 | Sidebar borders and dividers |
+| sidebar-danger | #F87171 | Logout hover foreground |
+| sidebar-danger-light | #301A20 | Logout hover background |
 
 ### 3.3 Layout Colors
 
@@ -114,8 +116,10 @@ Until migration is completed, the approved target palette and implemented palett
 | success-light | #F0FDF4 | Success background |
 | warning | #B45309 | Warning and approaching deadlines |
 | warning-light | #FFFBEB | Warning background |
-| danger | #DC2626 | Errors and overdue states |
+| danger | #B91C1C | Errors, overdue states, and destructive actions |
+| danger-hover | #991B1B | Destructive action hover |
 | danger-light | #FEF2F2 | Danger background |
+| on-danger | #FFFFFF | Content on destructive action backgrounds |
 | info | #1D4ED8 | Information and in-progress states |
 | info-light | #EFF6FF | Information background |
 | neutral-light | #F4F4F5 | Neutral background |
@@ -149,6 +153,8 @@ The existing Dashboard Summary and Tasks Page do not yet fully follow this mappi
 - Avoid direct palette utilities when an appropriate semantic token exists.
 - Reserve semantic colors for meaningful feedback.
 - Do not use the primary brand color for destructive actions.
+- Use danger, danger-hover, and on-danger for destructive buttons.
+- Use sidebar-danger and sidebar-danger-light for logout hover states on dark sidebar surfaces.
 - Distinguish interactive blue accents from informational status indicators through labels and context.
 - Verify contrast before approving new color combinations.
 - Do not assume every existing color combination meets WCAG requirements.
@@ -318,6 +324,10 @@ The approved design uses a dark sidebar with controlled blue accents.
 - Hover background: sidebar-hover.
 - Hover content: sidebar-foreground.
 - Dividers: sidebar-border.
+- Logout default content: sidebar-muted.
+- Logout hover background: sidebar-danger-light.
+- Logout hover content: sidebar-danger.
+- Logout keyboard focus: sidebar-accent with sidebar ring offset.
 
 Use appropriate active navigation semantics, including `aria-current` where applicable.
 
@@ -448,8 +458,10 @@ Use secondary buttons for cancellation and supporting actions.
 
 ### 10.5 Destructive Buttons
 
-- Danger background.
-- High-contrast foreground.
+- Default background: `bg-danger`.
+- Foreground: `text-on-danger`.
+- Enabled hover background: `enabled:hover:bg-danger-hover`.
+- Visible keyboard focus using the accent token.
 - Clear destructive action label.
 - Confirmation dialog when appropriate.
 - Loading and disabled states during processing.
@@ -645,6 +657,9 @@ Target WCAG 2.2 Level AA where applicable.
 - Verify blue links on light surfaces.
 - Verify sidebar text and active navigation states.
 - Verify semantic status badge contrast.
+- Verify danger text on danger-light surfaces.
+- Verify on-danger content on danger and danger-hover backgrounds.
+- Verify sidebar-danger content on sidebar-danger-light backgrounds.
 - Verify form control boundaries.
 - Verify focus indicators against adjacent surfaces.
 - Use distinct focus treatments for light and dark surfaces when necessary.
@@ -774,6 +789,7 @@ External recommendations must not automatically replace approved ClassHub design
 | 1.0.0 | Initial Modern Orange design system baseline derived from existing ClassHub source code and UI UX Pro Max guidance. |
 | 1.1.0 | Approved Academic Monochrome direction with dark sidebar, black primary actions, blue accents, refined neutral colors, and updated component standards. Implementation pending. |
 | 1.2.0 | Improved input border contrast from #A1A1AA to #71717A for better form accessibility. |
+| 1.3.0 | Updated danger from #DC2626 to #B91C1C to improve normal-text contrast on danger-light. Added danger-hover, on-danger, sidebar-danger, and sidebar-danger-light tokens and standardized destructive button and logout hover colors. Browser verification pending. |
 
 ### Research References
 

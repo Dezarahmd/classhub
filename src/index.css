@@ -21,6 +21,8 @@
   --color-sidebar-muted: #a1a1aa;
   --color-sidebar-accent: #93c5fd;
   --color-sidebar-border: #3f3f46;
+  --color-sidebar-danger: #f87171;
+  --color-sidebar-danger-light: #301a20;
 
   /* Layout Colors */
   --color-background: #fafafa;
@@ -37,8 +39,10 @@
   --color-warning: #b45309;
   --color-warning-light: #fffbeb;
 
-  --color-danger: #dc2626;
+  --color-danger: #b91c1c;
+  --color-danger-hover: #991b1b;
   --color-danger-light: #fef2f2;
+  --color-on-danger: #ffffff;
 
   --color-info: #1d4ed8;
   --color-info-light: #eff6ff;
