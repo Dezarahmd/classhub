@@ -196,6 +196,7 @@ export default function AssignmentForm({
           name="title"
           value={formData.title}
           onChange={handleChange}
+          aria-required="true"
           placeholder="Masukkan judul tugas"
           className={formControlClass}
         />
@@ -215,6 +216,7 @@ export default function AssignmentForm({
           name="subject_id"
           value={formData.subject_id}
           onChange={handleChange}
+          aria-required="true"
           disabled={
             loadingSubjects || Boolean(errorSubjects) || subjects.length === 0
           }
@@ -232,14 +234,25 @@ export default function AssignmentForm({
         </select>
 
         {errorSubjects && (
-          <p className="mt-2 text-sm text-danger">{errorSubjects}</p>
-        )}
-
-        {!loadingSubjects && !errorSubjects && subjects.length === 0 && (
-          <p className="mt-2 text-sm text-muted">
-            Belum ada mata kuliah tersedia.
+          <p role="alert" className="mt-2 text-sm text-danger">
+            {errorSubjects}
           </p>
         )}
+
+        <p
+          role="status"
+          className={
+            !loadingSubjects && !errorSubjects && subjects.length === 0
+              ? "mt-2 text-sm text-muted"
+              : "sr-only"
+          }
+        >
+          {loadingSubjects
+            ? "Memuat mata kuliah..."
+            : !errorSubjects && subjects.length === 0
+              ? "Belum ada mata kuliah tersedia."
+              : ""}
+        </p>
       </div>
 
       {/* Deskripsi */}
@@ -277,6 +290,7 @@ export default function AssignmentForm({
           name="deadline"
           value={formData.deadline}
           onChange={handleChange}
+          aria-required="true"
           className={formControlClass}
         />
       </div>
@@ -287,6 +301,11 @@ export default function AssignmentForm({
           {submitError}
         </p>
       )}
+
+      {/* Accessible submit feedback */}
+      <div role="status" className="sr-only">
+        {isSubmitting ? "Sedang menyimpan tugas." : ""}
+      </div>
 
       {/* Submit */}
       <button
