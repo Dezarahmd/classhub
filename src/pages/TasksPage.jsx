@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useMembership } from "../contexts/MembershipContext";
 import {
@@ -205,6 +204,10 @@ export default function TasksPage() {
               </button>
             </div>
 
+            <div role="status" className="sr-only">
+              {isDeleting ? "Sedang menghapus tugas." : ""}
+            </div>
+
             {deleteError && (
               <p role="alert" className="mt-3 text-sm text-danger">
                 {deleteError}
@@ -214,21 +217,24 @@ export default function TasksPage() {
         </div>
       )}
 
-      {loading && (
-        <p className="text-muted">Memuat daftar tugas...</p>
-      )}
+      <p
+        role="status"
+        className={
+          loading || (!errorMessage && displayedAssignments.length === 0)
+            ? "text-muted"
+            : "sr-only"
+        }
+      >
+        {loading
+          ? "Memuat daftar tugas..."
+          : !errorMessage && displayedAssignments.length === 0
+            ? "Belum ada tugas tersedia."
+            : ""}
+      </p>
 
       {errorMessage && (
-        <p className="text-danger">{errorMessage}</p>
+        <p role="alert" className="text-danger">{errorMessage}</p>
       )}
-
-      {!loading &&
-        !errorMessage &&
-        displayedAssignments.length === 0 && (
-          <p className="text-muted">
-            Belum ada tugas tersedia.
-          </p>
-        )}
 
       {!loading &&
         !errorMessage &&
